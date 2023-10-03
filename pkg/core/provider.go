@@ -20,6 +20,7 @@ type Provider interface {
 	AddQrCode(code string, cell Cell, rect props.Rect)
 	AddBarCode(code string, cell Cell, prop props.Barcode)
 	AddImage(value string, cell Cell, prop props.Rect, extension extension.Type)
+	CalculateImageHeight(value string, prop props.Rect, extension extension.Type) float64
 
 	// General
 	GetDimensions() (width float64, height float64)

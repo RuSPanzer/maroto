@@ -100,6 +100,10 @@ func (g *gofpdfProvider) CalculateTextHeight(text string, width float64, prop pr
 	return g.text.GetComputedHeight(text, prop, width)
 }
 
+func (g *gofpdfProvider) CalculateImageHeight(value string, prop props.Rect, extension extension.Type) float64 {
+	return g.image.CalculateImageHeight(value, prop, extension)
+}
+
 func (g *gofpdfProvider) AddSignature(text string, cell core.Cell, prop props.Text) {
 	g.signature.AddSpaceFor(text, cell, prop)
 }

@@ -63,3 +63,8 @@ func (b *base64Image) GetStructure() *tree.Node[core.Structure] {
 func (b *base64Image) SetConfig(config *config.Config) {
 	b.config = config
 }
+
+func (b *base64Image) GetComputedHeight(provider core.Provider, _ float64) float64 {
+	b.prop.MakeValid()
+	return provider.CalculateImageHeight(b.base64, b.prop, b.extension)
+}

@@ -18,6 +18,7 @@ import (
 type Image interface {
 	AddFromFile(path string, cell core.Cell, prop props.Rect) (err error)
 	AddFromBase64(stringBase64 string, cell core.Cell, prop props.Rect, extension extension.Type) (err error)
+	CalculateImageHeight(stringBase64 string, prop props.Rect, extension extension.Type) float64
 }
 
 type image struct {
@@ -46,6 +47,34 @@ func (s *image) AddFromFile(path string, cell core.Cell, prop props.Rect) error 
 
 	s.addImageToPdf(path, info, cell, prop)
 	return nil
+}
+
+func (s *image) CalculateImageHeight(stringBase64 string, prop props.Rect, extension extension.Type) float64 {
+	imageID, _ := uuid.NewRandom()
+
+	ss, _ := base64.StdEncoding.DecodeString(stringBase64)
+
+	info := s.pdf.RegisterImageOptionsReader(
+		imageID.String(),
+		gofpdf.ImageOptions{
+			ReadDpi:   false,
+			ImageType: string(extension),
+		},
+		bytes.NewReader(ss),
+	)
+
+	if info == nil {
+		return 0
+	}
+
+	_, top, _, _ := s.pdf.GetMargins()
+
+	h := info.Height()*prop.Percent/100 - top
+	if !prop.Center {
+		h += prop.Top
+	}
+
+	return h
 }
 
 // AddFromBase64 use a base64 string to add to PDF.
